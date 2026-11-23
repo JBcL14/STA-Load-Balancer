@@ -26,7 +26,7 @@ export default class LoadBalancer {
     // }
     //const server = this.servers[Math.floor(Math.random() * this.servers.length)];
     const server = this.servers[this.next];
-    console.log(server);
+    //console.log(server);
     this.actual = this.actual + 1;
     if (this.actual % server.power === 0) {
       this.actual = 0;
