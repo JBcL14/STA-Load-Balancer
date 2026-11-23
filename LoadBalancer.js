@@ -12,7 +12,8 @@ export default class LoadBalancer {
     //   activeProgress: 0.25 // Progreso de 0 a 1 (0 si está libre)
     // }
     // Los datos son de solo lectura y se actualizan durante la simulación.
-    this.rotation = servers.flatMap((server) => Array(server.power).fill(server.id));
+    //this.rotation = servers.flatMap((server) => Array(server.power).fill(server.id));
+    this.servers = Object.freeze([...servers])
     this.next = 0;
   }
 
@@ -24,9 +25,12 @@ export default class LoadBalancer {
     //   work: 4              // Unidades de trabajo necesarias
     // }
     //const server = this.servers[Math.floor(Math.random() * this.servers.length)];
-    const server = this.rotation[this.next];
-    this.next = (this.next + 1) % this.rotation.length;
+    //const server = this.rotation[this.next];
+    //this.next = (this.next + 1) % this.rotation.length;
+    const id = this.servers.findIndex(s => s.queuedRequests.length === Math.min(...this.servers.map(s => s.queuedRequests.length)));
+    const server = this.servers[id];
 
+    //this.next = (this.next + 1) % this.servers.length;
     // Envía la petición al servidor y devuelve su respuesta al cliente.
     return sendToServer(server.id);
   }
