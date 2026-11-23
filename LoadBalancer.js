@@ -13,6 +13,7 @@ export default class LoadBalancer {
     // }
     // Los datos son de solo lectura y se actualizan durante la simulación.
     this.servers = Object.freeze([...servers]);
+    this.next = 0;
   }
 
   async onRequestArrival(request, sendToServer) {
@@ -23,7 +24,8 @@ export default class LoadBalancer {
     //   work: 4              // Unidades de trabajo necesarias
     // }
     //const server = this.servers[Math.floor(Math.random() * this.servers.length)];
-    const server = this.servers[request.id.split('P')[1] % this.servers.length];
+    const server = this.servers[this.next];
+    this.next = (this.next + 1) % this.servers.length;
 
     // Envía la petición al servidor y devuelve su respuesta al cliente.
     return sendToServer(server.id);
